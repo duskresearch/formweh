@@ -57,20 +57,40 @@ function qa(q: string, a: string): string {
 
 export function landingPage(): string {
   const head = `
+<meta name="keywords" content="open source form builder, self-hosted forms, form backend, Formspree alternative, Typeform alternative, Tally alternative, waitlist software, referral waitlist, survey tool, contact form, Cloudflare Workers, own your data"/>
+<meta name="author" content="Ekpani"/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://formweh.com/"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="Formweh"/>
-<meta property="og:title" content="Formweh — open-source forms, waitlists, and surveys, made easy to self-host"/>
-<meta property="og:description" content="Build a form or bring your own, collect every response in one inbox you own, on your own site. Deploy to your Cloudflare in one click. Free, open source."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:title" content="Formweh — open-source forms, waitlists & surveys, made easy to self-host"/>
+<meta property="og:description" content="Build a form or bring your own, collect every response in one inbox you own, on your own site. Deploy to your Cloudflare in one click. Free and open source."/>
 <meta property="og:url" content="https://formweh.com/"/>
-<meta name="twitter:card" content="summary"/>
-<link rel="canonical" href="https://formweh.com/"/>
+<meta property="og:image" content="https://formweh.com/og.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="Formweh — open source forms, waitlists and surveys, made easy to self-host."/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Formweh — forms, waitlists & surveys, hosted by you"/>
+<meta name="twitter:description" content="Open-source forms, waitlists, and surveys, self-hosted on your Cloudflare in one click. Own your data, no monthly bill."/>
+<meta name="twitter:image" content="https://formweh.com/og.png"/>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
-  {"@type":"SoftwareApplication","name":"Formweh","applicationCategory":"DeveloperApplication","operatingSystem":"Cloudflare Workers","url":"https://formweh.com/","description":"Open-source forms, waitlists, and surveys, self-hosted on Cloudflare in one click.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://github.com/ekpani/formweh/blob/main/LICENSE","sameAs":["https://github.com/ekpani/formweh"],"author":{"@type":"Organization","name":"Ekpani","url":"https://ekpani.com"}},
+  {"@type":"Organization","@id":"https://ekpani.com/#org","name":"Ekpani","url":"https://ekpani.com","logo":"https://ekpani.com/images/icon.png"},
+  {"@type":"WebSite","@id":"https://formweh.com/#website","url":"https://formweh.com/","name":"Formweh","description":"Open-source forms, waitlists, and surveys, made easy to self-host on Cloudflare.","inLanguage":"en","publisher":{"@id":"https://ekpani.com/#org"}},
+  {"@type":"SoftwareApplication","@id":"https://formweh.com/#app","name":"Formweh","applicationCategory":"DeveloperApplication","operatingSystem":"Cloudflare Workers","url":"https://formweh.com/","description":"Open-source forms, waitlists, and surveys, self-hosted on your own Cloudflare in one click. Build a form or bring your own, collect every response in an inbox you own, with notifications, spam protection, and CSV export.","image":"https://formweh.com/og.png","softwareVersion":"0.1","datePublished":"2026-07-23","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://github.com/ekpani/formweh/blob/main/LICENSE","featureList":["Form builder for hosted forms and surveys","Bring-your-own form endpoints with CORS","Waitlist with a skip-the-line referral loop","Submissions inbox with CSV export and HTTP API","Email, Slack, Discord, and webhook notifications","Cloudflare Turnstile spam protection","Light and dark themes","One-click deploy to Cloudflare, free tier"],"sameAs":["https://github.com/ekpani/formweh"],"author":{"@id":"https://ekpani.com/#org"},"publisher":{"@id":"https://ekpani.com/#org"}},
+  {"@type":"HowTo","name":"Self-host Formweh on Cloudflare","description":"Deploy your own forms, waitlists, and surveys to Cloudflare in a couple of minutes.","totalTime":"PT3M","step":[
+    {"@type":"HowToStep","position":1,"name":"Deploy to Cloudflare","text":"Click Deploy to Cloudflare. It copies the code to your GitHub, creates your database, and publishes the Worker. A free Cloudflare account is all you need."},
+    {"@type":"HowToStep","position":2,"name":"Put it on your domain","text":"Add forms.yourdomain.com as a custom domain on the Worker in the Cloudflare dashboard. Cloudflare provisions DNS and SSL."},
+    {"@type":"HowToStep","position":3,"name":"Create your password","text":"Open your dashboard, set a password, and make your first form. Every response lands right there."}
+  ]},
   {"@type":"FAQPage","mainEntity":[
     {"@type":"Question","name":"Is Formweh free?","acceptedAnswer":{"@type":"Answer","text":"Yes. It is open source under the MIT license and runs on Cloudflare's free tier, so there is no subscription and no per-response cost."}},
-    {"@type":"Question","name":"Where is my data stored?","acceptedAnswer":{"@type":"Answer","text":"In your own Cloudflare account and your own D1 database. Formweh is a tool you run yourself, not a hosted service."}},
-    {"@type":"Question","name":"Can I use my own form, or do I have to build one?","acceptedAnswer":{"@type":"Answer","text":"Either. Build a form or survey in the builder, or point your own form's action at your Formweh endpoint and keep your markup."}}
+    {"@type":"Question","name":"Where is my form data stored?","acceptedAnswer":{"@type":"Answer","text":"In your own Cloudflare account and your own D1 database. Formweh is a tool you run yourself, not a hosted service, so no one else can see your responses."}},
+    {"@type":"Question","name":"Can I use my own form design, or do I have to build one?","acceptedAnswer":{"@type":"Answer","text":"Either. Build a form or survey in the builder, or point your own HTML, React, or Webflow form's action at your Formweh endpoint and keep your exact design. Cross-origin submissions are supported via CORS."}},
+    {"@type":"Question","name":"How is Formweh different from Formspree, Typeform, or Tally?","acceptedAnswer":{"@type":"Answer","text":"Those are hosted and, past a point, paid. Formweh is self-hosted and free: you own the domain, the data, and the code, and it handles forms, waitlists, and surveys in one tool."}},
+    {"@type":"Question","name":"Do notification emails cost anything?","acceptedAnswer":{"@type":"Answer","text":"Emailing your own verified address is free on any Cloudflare plan. Autoresponders to other people use Cloudflare Email Sending, which needs the Workers Paid plan at five dollars a month."}}
   ]}
 ]}
 </script>`
@@ -157,5 +177,39 @@ Sitemap: https://formweh.com/sitemap.xml
 
 export function sitemapXml(): string {
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.w3.org/2000/sitemap-image/1.1/schema"><url><loc>https://formweh.com/</loc></url></urlset>`
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://formweh.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+</urlset>`
 }
+
+// An AI-readable summary (llms.txt convention) so answer engines can describe
+// Formweh accurately. Part of the AEO layer alongside the JSON-LD and FAQ.
+export const LLMS_TXT = `# Formweh
+
+> Open-source forms, waitlists, and surveys, made easy to self-host on Cloudflare.
+
+Formweh is a free, open-source tool for collecting form responses that you run on your own Cloudflare account. It is a self-hosted alternative to hosted form services such as Formspree, Typeform, Tally, and GetWaitlist: you deploy it in one click and own the domain, the data, and the code. There is no subscription and no per-response cost.
+
+## What it does
+- Build a form or survey in a simple builder, hosted on your own site.
+- Or bring your own form: point any HTML, React, or Webflow form's action at your Formweh endpoint and keep your exact design (cross-origin submissions are supported via CORS).
+- Waitlists with a skip-the-line referral loop: every signup gets a share link and a position.
+- Templates: contact form, waitlist, survey, RSVP, coming-soon, feedback.
+- One inbox for every response, with a spam folder, CSV export, and a read HTTP API.
+- Notifications by email (through your own Cloudflare Email Service, free to your verified address), plus Slack, Discord, and custom webhooks.
+- Spam protection via Cloudflare Turnstile and a honeypot; junk is filed aside, never dropped.
+- Light and dark themes across the landing, dashboard, and hosted forms.
+
+## How to use it
+1. Deploy to Cloudflare in one click. It copies the code to your GitHub, creates your database, and publishes the Worker on Cloudflare's free tier.
+2. Add forms.yourdomain.com as a custom domain on the Worker; Cloudflare provisions DNS and SSL.
+3. Create an admin password on first run, then build or connect your first form.
+
+## Pricing
+Free and open source under the MIT license. Runs on Cloudflare's free tier. Emailing your own verified address is free on any plan; autoresponders to other people use Cloudflare Email Sending, which needs the Workers Paid plan (5 USD per month).
+
+## Links
+- Site: https://formweh.com
+- Source code: https://github.com/ekpani/formweh
+- Built by Ekpani: https://ekpani.com
+`
