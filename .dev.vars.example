@@ -1,0 +1,15 @@
+# Local-development variables. Copy to `.dev.vars` (which is gitignored) for `wrangler dev`.
+# In production you set none of these to deploy: you create your admin password on
+# first run, and configure the rest from the dashboard's Settings page.
+
+# Optional: a fallback admin password. Normally you create one during first-run
+# onboarding (stored hashed in D1). This is only a convenience for local testing.
+# SITE_PASSWORD=change-me-locally
+
+# Optional: enables the HTTP API. Send `Authorization: Bearer <API_TOKEN>`.
+# You can also generate this from Settings instead.
+# API_TOKEN=
+
+# Optional: Cloudflare Turnstile keys for spam protection (also settable in Settings).
+# TURNSTILE_SITE_KEY=
+# TURNSTILE_SECRET_KEY=

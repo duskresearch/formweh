@@ -1,0 +1,22 @@
+{
+  "name": "formweh",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Open-source forms, waitlists, and surveys, made easy to self-host on Cloudflare.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "npm run db:migrate:remote && wrangler deploy",
+    "db:create": "wrangler d1 create formweh-db",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote"
+  },
+  "dependencies": {
+    "hono": "^4.6.14",
+    "qrcode-svg": "^1.1.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260722.1",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.0.0"
+  }
+}
