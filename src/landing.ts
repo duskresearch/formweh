@@ -4,12 +4,12 @@ const REPO = 'https://github.com/ekpani/formweh'
 const DEPLOY = 'https://deploy.workers.cloudflare.com/?url=https://github.com/ekpani/formweh'
 
 const CSS = `
-main{max-width:940px;margin:0 auto;padding:0 24px}
-.nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+.nav{max-width:960px;margin:0 auto;padding:22px 24px;display:flex;align-items:center;justify-content:space-between}
 .nav .r{display:flex;align-items:center;gap:16px}
 .nav a.gh{font-family:var(--mono);font-size:12.5px;color:var(--sec)}
 .nav a.gh:hover{color:var(--accent)}
-.hero{padding:9vh 0 7vh;max-width:760px}
+.hero{padding:7vh 0 3vh;max-width:760px}
 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
 h1{font-size:clamp(32px,6vw,52px);font-weight:700;line-height:1.04;letter-spacing:-.03em;text-wrap:balance;margin-bottom:18px}
 .say{font-size:clamp(16px,2.2vw,19px);color:var(--sec);max-width:52ch;margin-bottom:30px}
@@ -19,18 +19,74 @@ h1{font-size:clamp(32px,6vw,52px);font-weight:700;line-height:1.04;letter-spacin
 .reassure{display:flex;flex-wrap:wrap;gap:9px 20px;margin-top:26px}
 .reassure span{font-family:var(--mono);font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:7px}
 .reassure span::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent)}
-.uses{display:flex;gap:10px;flex-wrap:wrap;margin-top:40px}
+.uses{display:flex;gap:10px;flex-wrap:wrap;margin-top:34px}
 .use{border:1px solid var(--border);background:var(--surface);border-radius:100px;padding:9px 18px;font-size:13.5px;color:var(--sec);display:inline-flex;gap:9px;align-items:center}
 .use b{color:var(--ink);font-weight:600}
-.block{padding:8vh 0;border-top:1px solid var(--border)}
-h2{font-size:clamp(22px,3.4vw,28px);font-weight:660;letter-spacing:-.02em;margin-bottom:8px;text-wrap:balance}
-.lede{color:var(--sec);font-size:15.5px;max-width:52ch;margin-bottom:30px}
+.block{padding:7vh 0}
+.block.line{border-top:1px solid var(--border)}
+h2{font-size:clamp(22px,3.4vw,29px);font-weight:680;letter-spacing:-.02em;margin-bottom:8px;text-wrap:balance}
+.lede{color:var(--sec);font-size:15.5px;max-width:54ch;margin-bottom:30px}
+
+/* ── product visuals (mock UI, theme-aware) ── */
+.frame{border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow-md);background:var(--surface)}
+.fbar{display:flex;align-items:center;gap:7px;padding:11px 15px;background:var(--sunken);border-bottom:1px solid var(--border)}
+.fbar i{width:10px;height:10px;border-radius:50%;background:var(--border-strong)}
+.fbar .u{font-family:var(--mono);font-size:12px;color:var(--muted);margin-left:7px}
+.shot{max-width:880px;margin:12px auto 0}
+.cap{text-align:center;font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--muted);margin-top:16px}
+
+.ibx{display:grid;grid-template-columns:198px 1fr;min-height:320px}
+.ibx-s{background:var(--sunken);border-right:1px solid var(--border);padding:15px 11px;font-size:13px}
+.ibx-s .wm{padding:2px 8px 12px;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+.ibx-s .wm .mk{width:15px;height:15px;border-radius:5px;background:var(--accent);display:grid;place-items:center}
+.ibx-s .wm .mk::after{content:"";width:6px;height:6px;background:var(--accent-fg);border-radius:1.5px}
+.ibx-s .g{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:12px 8px 7px}
+.ibx-s .it{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:7px;color:var(--sec)}
+.ibx-s .it.on{background:var(--raise);color:var(--ink);font-weight:600;box-shadow:var(--shadow-sm)}
+.ibx-s .it .c{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.ibx-s .it.on .c{color:var(--accent)}
+.ibx-m{min-width:0}
+.ibx-h{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--border)}
+.ibx-h b{font-size:15px;font-weight:660}
+.ibx-h .mc{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.ibx-h .ex{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--sec);border:1px solid var(--border-strong);border-radius:7px;padding:5px 10px}
+.ibx-r{display:grid;grid-template-columns:8px 1fr auto;gap:12px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--border)}
+.ibx-r .d{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:var(--glow)}
+.ibx-r.rd .d{background:transparent}
+.ibx-r .nm{font-weight:620;font-size:13px}
+.ibx-r .pv{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.ibx-r .t{font-family:var(--mono);font-size:10.5px;color:var(--muted);white-space:nowrap}
+
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(26px,4vw,50px);align-items:center}
+.txt h2{margin-bottom:10px}
+.pt{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--sec);margin-top:11px}
+.pt::before{content:"✓";color:var(--accent);font-weight:700;flex:none}
+
+.vform{padding:22px}
+.vform .ft{font-weight:660;font-size:16px;margin-bottom:3px}
+.vform .fd{color:var(--sec);font-size:12.5px;margin-bottom:16px}
+.vform label{font-size:11.5px;font-weight:600;margin-bottom:6px;display:block}
+.vform .fi{height:34px;border:1px solid var(--border-strong);border-radius:8px;background:var(--sunken);margin-bottom:13px}
+.vform .fi.ta{height:56px}
+.vform .fb{height:38px;border-radius:8px;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font-size:13px;font-weight:600}
+.code{background:#101208;padding:17px 19px;font-family:var(--mono);font-size:12.5px;line-height:1.75;color:#C7CBBE;overflow-x:auto;white-space:pre}
+.code .t{color:#7FB48C}.code .a{color:#E0B36B}.code .s{color:#9CC7D6}.code .m{color:#6E7568}.code .g{color:#3FCF5E}
+
+.wl{padding:32px 30px;text-align:center}
+.wl .ring{width:46px;height:46px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin:0 auto 14px;font-size:20px}
+.wl .wt{font-weight:660;font-size:16px}
+.wl .pos{font-family:var(--mono);font-size:42px;color:var(--accent);text-shadow:var(--glow);letter-spacing:-.02em;margin-top:14px;line-height:1}
+.wl .pd{color:var(--sec);font-size:13.5px;margin-top:8px}
+.wl .share{display:flex;gap:8px;margin-top:20px}
+.wl .share .lk{flex:1;font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--sunken);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:left;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.wl .share .cp{background:var(--accent);color:var(--accent-fg);border-radius:8px;padding:0 16px;display:grid;place-items:center;font-size:12px;font-weight:600}
+
 .feats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .feat{border:1px solid var(--border);background:var(--surface);border-radius:13px;padding:20px;box-shadow:var(--shadow-sm)}
 .feat .fi{width:30px;height:30px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-family:var(--mono);font-size:14px;margin-bottom:12px}
 .feat h3{font-size:15px;font-weight:640;margin-bottom:5px;letter-spacing:-.01em}
 .feat p{color:var(--sec);font-size:13.5px;line-height:1.5}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .step{border:1px solid var(--border);border-radius:13px;padding:20px;background:var(--surface)}
 .step .n{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em;margin-bottom:10px}
 .step h3{font-size:15px;font-weight:640;margin-bottom:5px}
@@ -40,9 +96,8 @@ h2{font-size:clamp(22px,3.4vw,28px);font-weight:660;letter-spacing:-.02em;margin
 .qa .a{color:var(--sec);font-size:14.5px;max-width:64ch}
 .qa .a a{color:var(--accent)}
 .foot{padding:6vh 0;border-top:1px solid var(--border);font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.foot a{color:var(--muted)}
-.foot a:hover{color:var(--accent)}
-@media(max-width:720px){.feats,.steps{grid-template-columns:1fr}}
+.foot a{color:var(--muted)}.foot a:hover{color:var(--accent)}
+@media(max-width:760px){.feats,.steps{grid-template-columns:1fr}.split{grid-template-columns:1fr}.split .frame{order:-1}.ibx{grid-template-columns:1fr}.ibx-s{display:none}}
 `
 
 function feat(icon: string, h: string, p: string): string {
@@ -54,6 +109,58 @@ function step(n: string, h: string, p: string): string {
 function qa(q: string, a: string): string {
   return `<div class="qa"><div class="q">${escapeHtml(q)}</div><div class="a">${a}</div></div>`
 }
+
+// ── product-visual mocks (rendered UI, so it matches the real thing in both themes) ──
+const INBOX = `<div class="frame"><div class="fbar"><i></i><i></i><i></i><span class="u">forms.yoursite.com</span></div>
+  <div class="ibx">
+    <div class="ibx-s">
+      <div class="wm"><span class="mk"></span>Formweh</div>
+      <div class="g">Forms</div>
+      <div class="it on">Contact <span class="c">12</span></div>
+      <div class="it">Waitlist <span class="c">48</span></div>
+      <div class="it">Survey <span class="c">31</span></div>
+      <div class="g">Filed</div>
+      <div class="it">Spam <span class="c">27</span></div>
+    </div>
+    <div class="ibx-m">
+      <div class="ibx-h"><b>Contact</b><span class="mc">12 responses · 3 new</span><span class="ex">Export CSV</span></div>
+      <div class="ibx-r"><span class="d"></span><div><div class="nm">Priya Menon</div><div class="pv">Loved the launch, any plans for a team tier?</div></div><span class="t">2m ago</span></div>
+      <div class="ibx-r"><span class="d"></span><div><div class="nm">devs@northwind.io</div><div class="pv">Can we self-host this behind our VPN?</div></div><span class="t">18m ago</span></div>
+      <div class="ibx-r rd"><span class="d"></span><div><div class="nm">Ana Sofia</div><div class="pv">Just saying thanks, this saved me a Formspree bill.</div></div><span class="t">1h ago</span></div>
+      <div class="ibx-r rd"><span class="d"></span><div><div class="nm">hello@studiolark.com</div><div class="pv">Interested in a partnership, who's the right contact?</div></div><span class="t">5h ago</span></div>
+    </div>
+  </div></div>`
+
+const FORM_CARD = `<div class="frame"><div class="fbar"><i></i><i></i><i></i><span class="u">forms.yoursite.com/f/contact</span></div>
+  <div class="vform">
+    <div class="ft">Get in touch</div>
+    <div class="fd">Send us a message and we'll get back to you.</div>
+    <label>Your name</label><div class="fi"></div>
+    <label>Email</label><div class="fi"></div>
+    <label>Message</label><div class="fi ta"></div>
+    <div class="fb">Send</div>
+  </div></div>`
+
+const CODE_SNIPPET = `<div class="frame"><div class="fbar"><i></i><i></i><i></i><span class="u">your-site.com · index.html</span></div>
+  <div class="code"><span class="m">&lt;!-- your form, your design, unchanged --&gt;</span>
+<span class="t">&lt;form</span> <span class="a">action</span>=<span class="s">"…/f/contact"</span> <span class="a">method</span>=<span class="s">"POST"</span><span class="t">&gt;</span>
+  <span class="t">&lt;input</span> <span class="a">name</span>=<span class="s">"email"</span> <span class="a">type</span>=<span class="s">"email"</span> <span class="t">/&gt;</span>
+  <span class="t">&lt;textarea</span> <span class="a">name</span>=<span class="s">"message"</span><span class="t">&gt;&lt;/textarea&gt;</span>
+  <span class="t">&lt;button&gt;</span>Send<span class="t">&lt;/button&gt;</span>
+<span class="t">&lt;/form&gt;</span>
+
+<span class="m">// or from JS, cross-origin, no CORS setup</span>
+<span class="g">await</span> fetch(url, { <span class="a">method</span>: <span class="s">"POST"</span>, <span class="a">body</span> })</div></div>`
+
+const WAITLIST = `<div class="frame" style="max-width:440px;margin:0 auto"><div class="fbar"><i></i><i></i><i></i><span class="u">forms.yoursite.com/f/waitlist</span></div>
+  <div class="wl">
+    <div class="ring">✓</div>
+    <div class="wt">You're on the list.</div>
+    <div class="pos">#47</div>
+    <div class="pd">of 1,204 in line</div>
+    <div class="share"><span class="lk">yoursite.com/f/waitlist?ref=k3f9x2</span><span class="cp">Copy</span></div>
+    <div class="pd" style="margin-top:14px">Every friend who joins moves you up.</div>
+  </div></div>`
 
 export function landingPage(): string {
   const head = `
@@ -103,7 +210,7 @@ export function landingPage(): string {
     <button class="tgl" type="button" onclick="__toggleTheme()" aria-label="Toggle theme">◐</button>
   </div>
 </nav>
-<main>
+<main class="wrap">
   <section class="hero">
     <div class="eyebrow">Open source · self-hosted</div>
     <h1>Open source forms, waitlists, and surveys, made easy to self-host.</h1>
@@ -120,37 +227,74 @@ export function landingPage(): string {
     </div>
   </section>
 
-  <section class="block">
-    <h2>Everything you collect, in one place.</h2>
-    <p class="lede">One product stands in for a form backend, a form builder, and a waitlist tool. Same inbox, all yours.</p>
-    <div class="feats">
-      ${feat('✎', 'Build or bring your own', 'A simple builder hosts a form on your site, or point your own form’s action at your endpoint. Both land in the same inbox.')}
-      ${feat('▦', 'Templates', 'Contact, waitlist, survey, RSVP, coming-soon, feedback. Start from one and tweak it in a minute.')}
-      ${feat('↗', 'Waitlist referrals', 'Every signup gets a share link and a skip-the-line position. Growth built into the form.')}
-      ${feat('✉', 'Notifications', 'Email through your own Cloudflare, free to your verified address, plus Slack, Discord, and webhooks.')}
-      ${feat('◈', 'Spam protection', 'Cloudflare Turnstile and a honeypot, built in and free. Junk gets filed aside, never lost.')}
-      ${feat('⤓', 'Own your data', 'Every response lives in your D1 database. Export to CSV, or pull it with the HTTP API, any time.')}
+  <div class="shot">${INBOX}<div class="cap">Every response, in one inbox you own. On your domain, not ours.</div></div>
+
+  <section class="block line">
+    <div class="split">
+      <div class="txt">
+        <h2>A form your visitors will actually finish.</h2>
+        <p class="lede">Build a clean form or survey in minutes and we host it on your site, in light or dark. Start from a template so there's nothing to design from scratch.</p>
+        <div class="pt">Forms, surveys, waitlists, and RSVPs</div>
+        <div class="pt">Six templates, ready to tweak</div>
+        <div class="pt">Looks like your site, not a third party's</div>
+      </div>
+      ${FORM_CARD}
     </div>
   </section>
 
-  <section class="block">
+  <section class="block line">
+    <div class="split">
+      ${CODE_SNIPPET}
+      <div class="txt">
+        <h2>Or keep the form you already built.</h2>
+        <p class="lede">Have a form you love? Point it at your endpoint and change nothing else. Your markup, your styles, your framework, untouched.</p>
+        <div class="pt">Keep your exact HTML, React, or Webflow form</div>
+        <div class="pt">Works cross-origin, no CORS to wrestle with</div>
+        <div class="pt">Lands in the very same inbox</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block line">
+    <div style="text-align:center;max-width:56ch;margin:0 auto 30px">
+      <h2>Waitlists that grow themselves.</h2>
+      <p class="lede" style="margin:0 auto">Every signup gets a share link and a place in line. Friends who join move them up, so your waitlist markets itself.</p>
+    </div>
+    ${WAITLIST}
+  </section>
+
+  <section class="block line">
+    <h2>One tool, three you'd otherwise pay for.</h2>
+    <p class="lede">A form backend, a form builder, and a waitlist tool in one. All free, all yours.</p>
+    <div class="feats">
+      ${feat('✉', 'Notifications where you are', 'Email through your own Cloudflare, free to your verified address, plus Slack, Discord, and webhooks.')}
+      ${feat('◈', 'Spam handled for you', 'Cloudflare Turnstile and a honeypot, built in and free. Junk gets filed aside, never lost.')}
+      ${feat('⤓', 'Your data, always exportable', 'Every response lives in your own database. Download CSV or pull it with the HTTP API, any time.')}
+      ${feat('▦', 'Templates to start from', 'Contact, waitlist, survey, RSVP, coming-soon, feedback. Pick one and make it yours.')}
+      ${feat('◐', 'Light and dark, done', 'Landing, dashboard, and every hosted form follow the theme. Nothing to configure.')}
+      ${feat('⟠', 'No lock-in, ever', 'Open source under MIT. It is your code on your Cloudflare. Leave whenever, take everything.')}
+    </div>
+  </section>
+
+  <section class="block line">
     <h2>Live in a couple of minutes.</h2>
     <p class="lede">One click hands the whole setup to Cloudflare. You never touch a command line.</p>
     <div class="steps">
-      ${step('01', 'Deploy to Cloudflare', 'Click the button. Cloudflare copies the code to your GitHub, creates your database, and publishes it. Free account is all you need.')}
+      ${step('01', 'Deploy to Cloudflare', 'Click the button. Cloudflare copies the code to your GitHub, creates your database, and publishes it. A free account is all you need.')}
       ${step('02', 'Put it on your domain', 'Point forms.yourdomain.com at your new Worker in the Cloudflare dashboard. Cloudflare handles DNS and SSL.')}
       ${step('03', 'Create your password', 'Open your dashboard, set a password, and make your first form. Every response lands right there.')}
     </div>
     <div class="cta" style="margin-top:30px">
       <a href="${DEPLOY}"><img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare"/></a>
+      <a class="btn ghost" href="${REPO}" target="_blank" rel="noopener">★ Star on GitHub</a>
     </div>
   </section>
 
-  <section class="block">
+  <section class="block line">
     <h2>Questions.</h2>
     ${qa('Is Formweh free?', 'Yes. Open source under the MIT license, running on Cloudflare’s free tier. No subscription, no per-response cost.')}
     ${qa('Where is my data stored?', 'In your own Cloudflare account and your own database. Formweh is a tool you run yourself, not a hosted service, so no one else can see your responses.')}
-    ${qa('Do I need to build a form, or can I bring my own?', 'Either. Build one in the builder, or point your own HTML/React/Webflow form’s action at your Formweh endpoint and keep your markup.')}
+    ${qa('Do I need to build a form, or can I bring my own?', 'Either. Build one in the builder, or point your own HTML/React/Webflow form’s action at your Formweh endpoint and keep your design.')}
     ${qa('How is it different from Formspree, Typeform, or Tally?', 'Those are hosted and, past a point, paid. Formweh is self-hosted and free: you own the domain, the data, and the code, and it does forms, waitlists, and surveys in one.')}
     ${qa('Do notification emails cost anything?', 'Emailing your own verified address is free on any Cloudflare plan. Autoresponders to other people use Cloudflare Email Sending, which needs the $5/mo Workers Paid plan.')}
   </section>
