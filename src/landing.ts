@@ -1,7 +1,7 @@
 import { shell, escapeHtml } from './theme'
 
-const REPO = 'https://github.com/ekpani/formweh'
-const DEPLOY = 'https://deploy.workers.cloudflare.com/?url=https://github.com/ekpani/formweh'
+const REPO = 'https://github.com/AspatialCo/formweh'
+const DEPLOY = 'https://deploy.workers.cloudflare.com/?url=https://github.com/AspatialCo/formweh'
 
 const CSS = `
 .wrap{max-width:960px;margin:0 auto;padding:0 24px}
@@ -165,7 +165,7 @@ const WAITLIST = `<div class="frame" style="max-width:440px;margin:0 auto"><div 
 export function landingPage(): string {
   const head = `
 <meta name="keywords" content="open source form builder, self-hosted forms, form backend, Formspree alternative, Typeform alternative, Tally alternative, waitlist software, referral waitlist, survey tool, contact form, Cloudflare Workers, own your data"/>
-<meta name="author" content="Ekpani"/>
+<meta name="author" content="Aspatial"/>
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
 <link rel="canonical" href="https://formweh.com/"/>
 <meta property="og:type" content="website"/>
@@ -184,9 +184,9 @@ export function landingPage(): string {
 <meta name="twitter:image" content="https://formweh.com/og.png"/>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
-  {"@type":"Organization","@id":"https://ekpani.com/#org","name":"Ekpani","url":"https://ekpani.com","logo":"https://ekpani.com/images/icon.png"},
-  {"@type":"WebSite","@id":"https://formweh.com/#website","url":"https://formweh.com/","name":"Formweh","description":"Open-source forms, waitlists, and surveys, made easy to self-host on Cloudflare.","inLanguage":"en","publisher":{"@id":"https://ekpani.com/#org"}},
-  {"@type":"SoftwareApplication","@id":"https://formweh.com/#app","name":"Formweh","applicationCategory":"DeveloperApplication","operatingSystem":"Cloudflare Workers","url":"https://formweh.com/","description":"Open-source forms, waitlists, and surveys, self-hosted on your own Cloudflare in one click. Build a form or bring your own, collect every response in an inbox you own, with notifications, spam protection, and CSV export.","image":"https://formweh.com/og.png","softwareVersion":"0.1","datePublished":"2026-07-23","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://github.com/ekpani/formweh/blob/main/LICENSE","featureList":["Form builder for hosted forms and surveys","Bring-your-own form endpoints with CORS","Waitlist with a skip-the-line referral loop","Submissions inbox with CSV export and HTTP API","Email, Slack, Discord, and webhook notifications","Cloudflare Turnstile spam protection","Light and dark themes","One-click deploy to Cloudflare, free tier"],"sameAs":["https://github.com/ekpani/formweh"],"author":{"@id":"https://ekpani.com/#org"},"publisher":{"@id":"https://ekpani.com/#org"}},
+  {"@type":"Organization","@id":"https://aspatial.co/#organization","name":"Aspatial","url":"https://aspatial.co","logo":"https://aspatial.co/aspatial-mark.svg"},
+  {"@type":"WebSite","@id":"https://formweh.com/#website","url":"https://formweh.com/","name":"Formweh","description":"Open-source forms, waitlists, and surveys, made easy to self-host on Cloudflare.","inLanguage":"en","publisher":{"@id":"https://aspatial.co/#organization"}},
+  {"@type":"SoftwareApplication","@id":"https://formweh.com/#app","name":"Formweh","applicationCategory":"DeveloperApplication","operatingSystem":"Cloudflare Workers","url":"https://formweh.com/","description":"Open-source forms, waitlists, and surveys, self-hosted on your own Cloudflare in one click. Build a form or bring your own, collect every response in an inbox you own, with notifications, spam protection, and CSV export.","image":"https://formweh.com/og.png","softwareVersion":"0.1","datePublished":"2026-07-23","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://github.com/AspatialCo/formweh/blob/main/LICENSE","featureList":["Form builder for hosted forms and surveys","Bring-your-own form endpoints with CORS","Waitlist with a skip-the-line referral loop","Submissions inbox with CSV export and HTTP API","Email, Slack, Discord, and webhook notifications","Cloudflare Turnstile spam protection","Light and dark themes","One-click deploy to Cloudflare, free tier"],"sameAs":["https://github.com/AspatialCo/formweh"],"author":{"@id":"https://aspatial.co/#organization"},"publisher":{"@id":"https://aspatial.co/#organization"}},
   {"@type":"HowTo","name":"Self-host Formweh on Cloudflare","description":"Deploy your own forms, waitlists, and surveys to Cloudflare in a couple of minutes.","totalTime":"PT3M","step":[
     {"@type":"HowToStep","position":1,"name":"Deploy to Cloudflare","text":"Click Deploy to Cloudflare. It copies the code to your GitHub, creates your database, and publishes the Worker. A free Cloudflare account is all you need."},
     {"@type":"HowToStep","position":2,"name":"Put it on your domain","text":"Add forms.yourdomain.com as a custom domain on the Worker in the Cloudflare dashboard. Cloudflare provisions DNS and SSL."},
@@ -300,7 +300,7 @@ export function landingPage(): string {
   </section>
 
   <div class="foot">
-    <span><a href="https://ekpani.com" target="_blank" rel="noopener">an ekpani tool</a></span>
+    <span><a href="https://aspatial.co" target="_blank" rel="noopener">an aspatial tool</a></span>
     <span>Open source · MIT · Not affiliated with Cloudflare</span>
   </div>
 </main>`
@@ -354,6 +354,6 @@ Free and open source under the MIT license. Runs on Cloudflare's free tier. Emai
 
 ## Links
 - Site: https://formweh.com
-- Source code: https://github.com/ekpani/formweh
-- Built by Ekpani: https://ekpani.com
+- Source code: https://github.com/AspatialCo/formweh
+- Built by Aspatial: https://aspatial.co
 `

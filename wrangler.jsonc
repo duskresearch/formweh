@@ -6,6 +6,7 @@
   "main": "src/index.ts",
   "compatibility_date": "2025-06-01",
   "observability": { "enabled": true },
+  "workers_dev": true,
 
   // The database. We deliberately DON'T hardcode a database_id here: the
   // "Deploy to Cloudflare" button provisions a fresh D1 for whoever clicks it and
@@ -15,7 +16,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "formweh-db"
+      "database_name": "formweh-db",
+      "database_id": "cf4abbfd-2765-4f41-a9d8-ebc28956b6be"
     }
   ],
 
@@ -23,7 +25,17 @@
   // lands, and (on the Workers Paid plan) send autoresponders from your domain.
   // Sending to your own verified address is free on any plan; nothing to
   // configure to deploy — the app guides you through verifying it on first run.
-  "send_email": [{ "name": "EMAIL" }]
+  "send_email": [{ "name": "EMAIL" }],
+
+  // Maintainer note (Aspatial's own formweh.com instance): these attach the
+  // marketing domain. Anyone self-hosting should REMOVE this routes block and use
+  // their own forms.<domain> custom domain instead — a routes array is the
+  // authoritative custom-domain list for the Worker.
+  "routes": [
+    { "pattern": "formweh.com", "custom_domain": true },
+    { "pattern": "www.formweh.com", "custom_domain": true },
+    { "pattern": "forms.formweh.com", "custom_domain": true }
+  ]
 
   // Custom domain (for later): point forms.yourdomain.com at this Worker by adding
   // it as a Custom Domain in the Cloudflare dashboard (Workers > your worker >

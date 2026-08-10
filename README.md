@@ -4,7 +4,7 @@
 
 Build a form or bring your own, collect every response in one inbox you own, on your own site. No servers, no Docker, no database to provision, and no monthly bill. It lives entirely on Cloudflare's free tier.
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ekpani/formweh)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/AspatialCo/formweh)
 
 ---
 
@@ -91,7 +91,7 @@ Authorization: Bearer <token>
 ## Run it locally
 
 ```bash
-git clone https://github.com/ekpani/formweh.git
+git clone https://github.com/AspatialCo/formweh.git
 cd formweh
 npm install
 npm run db:migrate:local          # create the local tables
@@ -121,4 +121,4 @@ MIT. See [LICENSE](./LICENSE) and do what you like with it.
 
 ---
 
-<sub>Forms, waitlists, and surveys, hosted by you. Built by [Ekpani](https://ekpani.com).</sub>
+<sub>Forms, waitlists, and surveys, hosted by you. Built by [Aspatial](https://aspatial.co).</sub>
