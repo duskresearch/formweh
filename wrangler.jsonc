@@ -27,7 +27,7 @@
   // configure to deploy — the app guides you through verifying it on first run.
   "send_email": [{ "name": "EMAIL" }],
 
-  // Maintainer note (Aspatial's own formweh.com instance): these attach the
+  // Maintainer note (Dusk Research's own formweh.com instance): these attach the
   // marketing domain. Anyone self-hosting should REMOVE this routes block and use
   // their own forms.<domain> custom domain instead — a routes array is the
   // authoritative custom-domain list for the Worker.
