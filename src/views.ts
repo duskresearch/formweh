@@ -273,7 +273,7 @@ export async function newFormPage(c: Ctx): Promise<Response> {
 }
 
 // ── login / first-run setup ─────────────────────────────────────────────────────
-export function loginOrSetupPage(hasPw: boolean, error?: string): string {
+export function loginOrSetupPage(hasPw: boolean, error?: string, setupKey = ''): string {
   const css = `
     .auth{max-width:380px;margin:14vh auto;padding:0 24px}
     .auth .brand{display:flex;justify-content:center;margin-bottom:26px}
@@ -284,7 +284,11 @@ export function loginOrSetupPage(hasPw: boolean, error?: string): string {
     .auth form{display:flex;flex-direction:column;gap:14px}
     .top{display:flex;justify-content:flex-end;padding:16px 18px}`
   const err =
-    error === 'wrong' ? 'That password is not right.' : error === 'short' ? 'Use at least 8 characters.' : error === 'unset' ? 'Set a password first.' : ''
+    error === 'wrong' ? 'That password is not right.'
+    : error === 'short' ? 'Use at least 8 characters.'
+    : error === 'unset' ? 'Set a password first.'
+    : error === 'badkey' ? 'That setup link isn’t valid. Use the exact link your installer gave you.'
+    : ''
   const body = hasPw
     ? `<div class="top"><button class="tgl" type="button" onclick="__toggleTheme()">◐</button></div>
        <main class="auth"><div class="brand">${wordmark(18)}</div><div class="card">
@@ -298,6 +302,7 @@ export function loginOrSetupPage(hasPw: boolean, error?: string): string {
         <h1>Welcome to Formweh</h1><p class="s">Create a password to protect your dashboard. This is the only thing guarding it, so make it a good one.</p>
         ${err ? `<div class="err">${escapeHtml(err)}</div>` : ''}
         <form method="POST" action="/setup">
+          ${setupKey ? `<input type="hidden" name="key" value="${escapeAttr(setupKey)}"/>` : ''}
           <div><label for="pw">Choose a password</label><input id="pw" type="password" name="password" minlength="8" autofocus required placeholder="At least 8 characters"/></div>
           <button class="btn lg" type="submit">Create dashboard</button></form></div></main>`
   return shell({ title: hasPw ? 'Sign in · Formweh' : 'Set up · Formweh', css, body })

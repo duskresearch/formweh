@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import type { Context } from 'hono'
 import { gate, handleLogin, handleLogout, isAuthed } from './auth'
-import { hasPassword, createPassword, effectiveApiToken } from './settings'
+import { hasPassword, createPassword, effectiveApiToken, getSetting, setSetting, timingSafeEqual } from './settings'
 import { DEPARTURE_MONO_WOFF2_B64 } from './font'
 import { FAVICON_SVG, shell } from './theme'
 import { landingPage, ROBOTS_TXT, sitemapXml, LLMS_TXT } from './landing'
@@ -118,7 +118,7 @@ app.get('/f/:slug/thanks', async (c) => {
 // ── auth (public) ──────────────────────────────────────────────────────────────
 app.get('/login', async (c) => {
   if (await isAuthed(c)) return c.redirect('/')
-  return c.html(loginOrSetupPage(await hasPassword(c.env), c.req.query('error')))
+  return c.html(loginOrSetupPage(await hasPassword(c.env), c.req.query('error'), c.req.query('key') ?? ''))
 })
 // Best-effort brute-force brake, per isolate: five bad passwords from one
 // address buys a minute of lockout. Real rate limiting belongs in front (WAF);
@@ -144,7 +144,13 @@ app.post('/setup', async (c) => {
   if (await hasPassword(c.env)) return c.redirect('/login')
   const body = await c.req.parseBody()
   const pw = String(body.password ?? '')
-  if (pw.length < 8) return c.redirect('/login?error=short')
+  const key = String(body.key ?? '')
+  const back = key ? `&key=${encodeURIComponent(key)}` : ''
+  // If the installer stored a one-time claim token, the request must carry it;
+  // it burns on success. Without one, classic first-visit setup applies.
+  const storedToken = await getSetting(c.env, 'setup_token').catch(() => null)
+  if (storedToken && !timingSafeEqual(key, storedToken)) return c.redirect('/login?error=badkey')
+  if (pw.length < 8) return c.redirect(`/login?error=short${back}`)
   let created = false
   try {
     created = await createPassword(c.env, pw) // conflict-safe: exactly one concurrent setup wins
@@ -155,6 +161,7 @@ app.post('/setup', async (c) => {
     throw e
   }
   if (!created) return c.redirect('/login')
+  if (storedToken) await setSetting(c.env, 'setup_token', null) // burn the claim token
   const { issueSession } = await import('./auth')
   await issueSession(c)
   return c.redirect('/?welcome=1')
