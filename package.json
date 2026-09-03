@@ -5,7 +5,8 @@
   "description": "Open-source forms, waitlists, and surveys, made easy to self-host on Cloudflare.",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "npm run db:migrate:remote && wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "deploy": "npm run typecheck && npm run db:migrate:remote && wrangler deploy",
     "db:create": "wrangler d1 create formweh-db",
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
     "db:migrate:remote": "wrangler d1 migrations apply DB --remote"
