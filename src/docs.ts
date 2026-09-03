@@ -76,6 +76,19 @@ export function docsPage() {
     '<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>' +
     '<title>Documentation \u00b7 Formweh</title>' +
     '<meta name="description" content="How to deploy, configure, and use Formweh, self-hosted forms, waitlists and surveys."/>' +
+    '<link rel="canonical" href="https://formweh.com/docs"/>' +
+    '<meta name="robots" content="index,follow"/>' +
+    '<meta property="og:type" content="article"/>' +
+    '<meta property="og:site_name" content="Formweh"/>' +
+    '<meta property="og:title" content="Formweh Documentation"/>' +
+    '<meta property="og:description" content="How to deploy, configure, and use Formweh, self-hosted forms, waitlists and surveys."/>' +
+    '<meta property="og:url" content="https://formweh.com/docs"/>' +
+    '<meta property="og:image" content="https://formweh.com/og.png"/>' +
+    '<meta name="twitter:card" content="summary_large_image"/>' +
+    '<meta name="twitter:title" content="Formweh Documentation"/>' +
+    '<meta name="twitter:description" content="How to deploy, configure, and use Formweh, self-hosted forms, waitlists and surveys."/>' +
+    '<meta name="twitter:image" content="https://formweh.com/og.png"/>' +
+    '<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","@id":"https://formweh.com/docs#article","headline":"Formweh Documentation","description":"How to deploy, configure, and use Formweh, self-hosted forms, waitlists and surveys.","inLanguage":"en","url":"https://formweh.com/docs","author":{"@type":"Organization","name":"Dusk Research","url":"https://duskresearch.com"},"publisher":{"@type":"Organization","name":"Dusk Research","url":"https://duskresearch.com"},"about":{"@type":"SoftwareApplication","name":"Formweh","applicationCategory":"DeveloperApplication","url":"https://formweh.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://formweh.com/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://formweh.com/docs"}]}]}</script>' +
     '<link rel="icon" href="/favicon.svg" type="image/svg+xml"/>' +
     '<style>' + DOCS_CSS + '</style></head><body>' +
     '<header class="top"><a class="wm" href="/">Formweh</a><span class="bc">/ docs</span></header>' +

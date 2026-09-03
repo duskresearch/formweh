@@ -322,9 +322,11 @@ Sitemap: https://formweh.com/sitemap.xml
 `
 
 export function sitemapXml(): string {
+  const lastmod = '2026-09-03'
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://formweh.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://formweh.com/</loc><lastmod>${lastmod}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://formweh.com/docs</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>`
 }
 

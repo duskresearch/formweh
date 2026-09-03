@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <defs>
+    <radialGradient id="glow" gradientUnits="userSpaceOnUse" cx="1056" cy="-63" r="540">
+      <stop offset="0" stop-color="#3FCF5E" stop-opacity="0.12"/>
+      <stop offset="0.6" stop-color="#3FCF5E" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="1.4" cy="1.4" r="1.4" fill="#3FCF5E" fill-opacity="0.12"/>
+    </pattern>
+    <radialGradient id="dotmaskgrad" gradientUnits="userSpaceOnUse" cx="1080" cy="76" r="430">
+      <stop offset="0" stop-color="#fff" stop-opacity="1"/>
+      <stop offset="0.7" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="dotmask"><rect width="1200" height="630" fill="url(#dotmaskgrad)"/></mask>
+    <filter id="cardshadow" x="-40%" y="-40%" width="180%" height="200%">
+      <feDropShadow dx="0" dy="30" stdDeviation="20" flood-color="#000" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="#070809"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#dots)" mask="url(#dotmask)"/>
+
+  <!-- mock form card, top right -->
+  <g transform="translate(822,150)" filter="url(#cardshadow)">
+    <rect width="300" height="206" rx="16" fill="#0D0F12" stroke="#1E2329" stroke-width="1"/>
+    <text x="22" y="42" font-size="17" font-weight="600" fill="#ECEEF0">Join the waitlist</text>
+    <rect x="22" y="58"  width="256" height="34" rx="8" fill="#050607" stroke="#2A3036" stroke-width="1"/>
+    <rect x="22" y="103" width="256" height="34" rx="8" fill="#050607" stroke="#2A3036" stroke-width="1"/>
+    <rect x="22" y="148" width="256" height="36" rx="8" fill="#3FCF5E"/>
+    <text x="150" y="171" font-size="14" font-weight="600" fill="#07140B" text-anchor="middle">Join</text>
+  </g>
+
+  <!-- wordmark -->
+  <rect x="75" y="69" width="40" height="40" rx="12" fill="#3FCF5E" fill-opacity="0.15"/>
+  <rect x="80" y="74" width="30" height="30" rx="9" fill="#3FCF5E"/>
+  <rect x="89.5" y="83.5" width="11" height="11" rx="3" fill="#07140B"/>
+  <text x="123" y="97" font-size="26" font-weight="700" fill="#ECEEF0" style="letter-spacing:-0.5px">formweh</text>
+
+  <!-- headline -->
+  <g font-size="66" font-weight="700" fill="#ECEEF0" style="letter-spacing:-2px">
+    <text x="80" y="250">Open source forms,</text>
+    <text x="80" y="319">waitlists &amp; surveys,</text>
+    <text x="80" y="388">made easy to</text>
+    <text x="80" y="457" fill="#3FCF5E">self-host.</text>
+  </g>
+
+  <!-- footer -->
+  <text x="80" y="548" font-size="19">
+    <tspan fill="#ECEEF0" font-weight="600">Yours to keep</tspan><tspan fill="#9AA0A6">, on your own site. No monthly bill.</tspan>
+  </text>
+  <text x="1120" y="548" font-size="15" fill="#9AA0A6" text-anchor="end" font-family="Menlo, monospace" style="letter-spacing:0.6px">by Dusk Research</text>
+</svg>
