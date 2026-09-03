@@ -1,0 +1,12 @@
+// Staging preview of the LANDING only, on workers.dev. FORCE_LANDING renders
+// the marketing page on any host. Never given routes; production stays put.
+{
+  "name": "formweh-staging",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-01-01",
+  "workers_dev": true,
+  "vars": { "FORCE_LANDING": "1" },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "formweh-db", "database_id": "cf4abbfd-2765-4f41-a9d8-ebc28956b6be" }
+  ]
+}

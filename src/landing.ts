@@ -101,7 +101,8 @@ h2{font-size:clamp(22px,3.4vw,29px);font-weight:680;letter-spacing:-.02em;margin
 `
 
 function feat(icon: string, h: string, p: string): string {
-  return `<div class="feat"><div class="fi">${icon}</div><h3>${escapeHtml(h)}</h3><p>${escapeHtml(p)}</p></div>`
+  void icon
+  return `<div class="feat"><h3>${escapeHtml(h)}</h3><p>${escapeHtml(p)}</p></div>`
 }
 function step(n: string, h: string, p: string): string {
   return `<div class="step"><div class="n">${n}</div><h3>${escapeHtml(h)}</h3><p>${escapeHtml(p)}</p></div>`
@@ -206,7 +207,8 @@ export function landingPage(): string {
 <nav class="nav">
   <a href="/">${wm()}</a>
   <div class="r">
-    <a class="gh" href="${REPO}" target="_blank" rel="noopener">★ GitHub</a>
+    <a class="gh" href="/docs">Docs</a>
+    <a class="gh" href="${REPO}" target="_blank" rel="noopener">GitHub</a>
     <button class="tgl" type="button" onclick="__toggleTheme()" aria-label="Toggle theme">◐</button>
   </div>
 </nav>
@@ -215,9 +217,9 @@ export function landingPage(): string {
     <div class="eyebrow">Open source · self-hosted</div>
     <h1>Open source forms, waitlists, and surveys, made easy to self-host.</h1>
     <p class="say">Build one here or drop your own into any page. Everything you collect lands in <b>one inbox you own</b>, on your own site. No servers to run, no monthly bill.</p>
-    <div class="cta">
-      <a href="${DEPLOY}"><img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare"/></a>
-      <a class="btn ghost" href="${REPO}" target="_blank" rel="noopener">★ Star on GitHub</a>
+    <div class="cta" style="flex-direction:column;align-items:flex-start;gap:10px">
+      <button class="btn lg" type="button" onclick="navigator.clipboard.writeText('Read https://formweh.com/agent.md and set up Formweh on my own Cloudflare account. It has every step and check; ask me only for what it says to ask.');this.textContent='Copied ✓'">Copy setup prompt for your agent</button>
+      <span style="font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:var(--muted)">or <a href="${DEPLOY}" style="color:var(--sec);text-decoration:underline;text-underline-offset:3px">deploy it yourself</a> · <a href="${REPO}" target="_blank" rel="noopener" style="color:var(--sec);text-decoration:underline;text-underline-offset:3px">source</a></span>
     </div>
     <div class="reassure"><span>Open source</span><span>Self-hosted in minutes</span><span>No monthly bill</span><span>Yours to keep</span></div>
     <div class="uses">
@@ -232,7 +234,7 @@ export function landingPage(): string {
   <section class="block line">
     <div class="split">
       <div class="txt">
-        <h2>A form your visitors will actually finish.</h2>
+        <h2>Build a form in minutes.</h2>
         <p class="lede">Build a clean form or survey in minutes and we host it on your site, in light or dark. Start from a template so there's nothing to design from scratch.</p>
         <div class="pt">Forms, surveys, waitlists, and RSVPs</div>
         <div class="pt">Six templates, ready to tweak</div>
@@ -258,7 +260,7 @@ export function landingPage(): string {
   <section class="block line">
     <div style="text-align:center;max-width:56ch;margin:0 auto 30px">
       <h2>Waitlists that grow themselves.</h2>
-      <p class="lede" style="margin:0 auto">Every signup gets a share link and a place in line. Friends who join move them up, so your waitlist markets itself.</p>
+      <p class="lede" style="margin:0 auto">Every signup gets a share link and a place in line. Friends who join move them up.</p>
     </div>
     ${WAITLIST}
   </section>
@@ -286,7 +288,7 @@ export function landingPage(): string {
     </div>
     <div class="cta" style="margin-top:30px">
       <a href="${DEPLOY}"><img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare"/></a>
-      <a class="btn ghost" href="${REPO}" target="_blank" rel="noopener">★ Star on GitHub</a>
+      <a class="btn ghost" href="${REPO}" target="_blank" rel="noopener">Star on GitHub</a>
     </div>
   </section>
 
@@ -300,7 +302,7 @@ export function landingPage(): string {
   </section>
 
   <div class="foot">
-    <span><a href="https://duskresearch.com" target="_blank" rel="noopener">a Dusk Research tool</a></span>
+    <span>© 2026 <a href="https://duskresearch.com" target="_blank" rel="noopener">Dusk Research</a> · <a href="/docs">Docs</a></span>
     <span>Open source · MIT · Not affiliated with Cloudflare</span>
   </div>
 </main>`
@@ -354,6 +356,8 @@ Free and open source under the MIT license. Runs on Cloudflare's free tier. Emai
 
 ## Links
 - Site: https://formweh.com
+- Docs: https://formweh.com/docs
+- Full docs for LLMs: https://formweh.com/llms-full.txt
 - Source code: https://github.com/duskresearch/formweh
 - Built by Dusk Research: https://duskresearch.com
 

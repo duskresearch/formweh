@@ -6,6 +6,7 @@ import { DEPARTURE_MONO_WOFF2_B64 } from './font'
 import { FAVICON_SVG, shell } from './theme'
 import { landingPage, ROBOTS_TXT, sitemapXml, LLMS_TXT } from './landing'
 import { AGENT_MD } from './agent-md'
+import { DOCS_MD, docsPage } from './docs'
 import { OG_PNG_B64, hasOgImage } from './og'
 import { homePage, inboxPage, submissionPage, submissionAction, newFormPage, loginOrSetupPage } from './views'
 import { builderPage, saveBuilder } from './builder'
@@ -26,6 +27,7 @@ export type Env = {
   API_TOKEN?: string
   TURNSTILE_SITE_KEY?: string
   TURNSTILE_SECRET_KEY?: string
+  FORCE_LANDING?: string // staging only: render the marketing landing on any host
 }
 
 type Ctx = Context<{ Bindings: Env }>
@@ -61,12 +63,14 @@ app.use('*', async (c, next) => {
     u.hostname = 'formweh.com'
     return c.redirect(u.toString(), 301)
   }
-  if (h === 'formweh.com') {
+  if (h === 'formweh.com' || c.env.FORCE_LANDING === '1') {
     const p = c.req.path
     if (p === '/robots.txt') return c.body(ROBOTS_TXT, 200, { 'content-type': 'text/plain; charset=utf-8' })
     if (p === '/sitemap.xml') return c.body(sitemapXml(), 200, { 'content-type': 'application/xml; charset=utf-8' })
     if (p === '/llms.txt') return c.body(LLMS_TXT, 200, { 'content-type': 'text/plain; charset=utf-8' })
     if (p === '/agent.md') return c.body(AGENT_MD, 200, { 'content-type': 'text/markdown; charset=utf-8' })
+    if (p === '/llms-full.txt') return c.body(LLMS_TXT + '\n\n---\n\n' + DOCS_MD + '\n\n---\n\n' + AGENT_MD, 200, { 'content-type': 'text/plain; charset=utf-8' })
+    if (p === '/docs') return c.html(docsPage())
     if (p === '/og.png') {
       if (!hasOgImage()) return c.notFound()
       const bin = atob(OG_PNG_B64)
