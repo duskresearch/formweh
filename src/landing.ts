@@ -356,4 +356,10 @@ Free and open source under the MIT license. Runs on Cloudflare's free tier. Emai
 - Site: https://formweh.com
 - Source code: https://github.com/duskresearch/formweh
 - Built by Dusk Research: https://duskresearch.com
+
+## For agents
+
+To set Formweh up for your human on their own Cloudflare account, fetch
+https://formweh.com/agent.md and follow it exactly. It contains every step,
+a check for each, and the one thing to do immediately after deploying.
 `

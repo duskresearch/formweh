@@ -8,6 +8,17 @@ Build a form or bring your own, collect every response in one inbox you own, on 
 
 ---
 
+## Set it up with your agent
+
+Tell Claude Code, Cursor, or any coding agent:
+
+> Read https://formweh.com/agent.md and set up Formweh on my own Cloudflare
+> account. It has every step and check; ask me only for what it says to ask.
+
+The runbook walks the agent through the database, migrations, deploy, and
+verification, with a check after every step, and tells it to hand you the
+URL immediately so you set the dashboard password yourself.
+
 ## What you get
 
 - **Build a form, or bring your own.** A simple builder hosts a form or survey on your site, or point your own HTML / React / Webflow form's `action` at your endpoint and keep your markup. Both land in the same inbox.

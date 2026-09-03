@@ -5,6 +5,7 @@ import { hasPassword, createPassword, effectiveApiToken } from './settings'
 import { DEPARTURE_MONO_WOFF2_B64 } from './font'
 import { FAVICON_SVG, shell } from './theme'
 import { landingPage, ROBOTS_TXT, sitemapXml, LLMS_TXT } from './landing'
+import { AGENT_MD } from './agent-md'
 import { OG_PNG_B64, hasOgImage } from './og'
 import { homePage, inboxPage, submissionPage, submissionAction, newFormPage, loginOrSetupPage } from './views'
 import { builderPage, saveBuilder } from './builder'
@@ -65,6 +66,7 @@ app.use('*', async (c, next) => {
     if (p === '/robots.txt') return c.body(ROBOTS_TXT, 200, { 'content-type': 'text/plain; charset=utf-8' })
     if (p === '/sitemap.xml') return c.body(sitemapXml(), 200, { 'content-type': 'application/xml; charset=utf-8' })
     if (p === '/llms.txt') return c.body(LLMS_TXT, 200, { 'content-type': 'text/plain; charset=utf-8' })
+    if (p === '/agent.md') return c.body(AGENT_MD, 200, { 'content-type': 'text/markdown; charset=utf-8' })
     if (p === '/og.png') {
       if (!hasOgImage()) return c.notFound()
       const bin = atob(OG_PNG_B64)
