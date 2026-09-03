@@ -229,6 +229,30 @@ export async function deleteSubmission(env: Env, id: number): Promise<void> {
   await env.DB.prepare('DELETE FROM submissions WHERE id = ?').bind(id).run()
 }
 
+// Everything for one export, batched under D1's row limits. Capped generously so
+// a runaway table can't hold the Worker open forever.
+export async function listAllSubmissions(env: Env, formId: number, opts: { spam?: boolean } = {}): Promise<SubmissionRow[]> {
+  const all: SubmissionRow[] = []
+  const batch = 500
+  for (let offset = 0; offset < 50_000; offset += batch) {
+    const rows = await listSubmissions(env, formId, { spam: opts.spam, limit: batch, offset })
+    all.push(...rows)
+    if (rows.length < batch) break
+  }
+  return all
+}
+
+// The earliest live signup with this email, for idempotent waitlist joins.
+export async function subByEmail(env: Env, formId: number, email: string): Promise<SubmissionRow | null> {
+  return (
+    (await env.DB.prepare(
+      'SELECT * FROM submissions WHERE form_id = ? AND spam = 0 AND email = ? COLLATE NOCASE ORDER BY created_at ASC LIMIT 1',
+    )
+      .bind(formId, email)
+      .first<SubmissionRow>()) ?? null
+  )
+}
+
 // Waitlist referral: look up a signup by its share code, and its position in line.
 export async function subByRefCode(env: Env, code: string): Promise<SubmissionRow | null> {
   return (

@@ -1,6 +1,6 @@
 import type { Context } from 'hono'
 import type { Env } from './index'
-import { getForm, listSubmissions, parseData, parseFields } from './db'
+import { getForm, listAllSubmissions, parseData, parseFields } from './db'
 
 type Ctx = Context<{ Bindings: Env }>
 
@@ -11,7 +11,7 @@ export async function submissionsCsv(c: Ctx): Promise<Response> {
   const slug = c.req.param('slug') ?? ''
   const form = await getForm(c.env, slug)
   if (!form) return c.notFound()
-  const subs = await listSubmissions(c.env, form.id, { limit: 5000 })
+  const subs = await listAllSubmissions(c.env, form.id)
 
   const known = parseFields(form).map((f) => f.key)
   const extra = new Set<string>()
@@ -44,6 +44,9 @@ export async function submissionsCsv(c: Ctx): Promise<Response> {
 }
 
 function csvCell(v: unknown): string {
-  const s = String(v ?? '')
-  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
+  let s = String(v ?? '')
+  // Spreadsheets execute cells that start like formulas; a leading apostrophe
+  // makes them inert text without changing the stored data.
+  if (/^[=+\-@\t]/.test(s)) s = `'` + s
+  return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
 }

@@ -19,11 +19,17 @@ const cookieOpts = (c: Ctx) => ({
   maxAge: 60 * 60 * 24 * 30, // 30 days
 })
 
+const SESSION_MAX_AGE_S = 60 * 60 * 24 * 30 // 30 days, enforced server-side
+
 export async function isAuthed(c: Ctx): Promise<boolean> {
   const secret = await authSecret(c.env)
   if (!secret) return false
   const v = await getSignedCookie(c, secret, COOKIE)
-  return v === 'ok'
+  if (typeof v !== 'string' || !v.startsWith('ok:')) return false
+  const issued = Number(v.slice(3))
+  if (!Number.isFinite(issued)) return false
+  const age = Date.now() / 1000 - issued
+  return age >= 0 && age <= SESSION_MAX_AGE_S
 }
 
 // Middleware: block a page or endpoint unless logged in.
@@ -38,7 +44,7 @@ export async function gate(c: Ctx, next: Next) {
 export async function issueSession(c: Ctx): Promise<boolean> {
   const secret = await authSecret(c.env)
   if (!secret) return false
-  await setSignedCookie(c, COOKIE, 'ok', secret, cookieOpts(c))
+  await setSignedCookie(c, COOKIE, `ok:${Math.floor(Date.now() / 1000)}`, secret, cookieOpts(c))
   return true
 }
 

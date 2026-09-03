@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import type { Context } from 'hono'
 import { gate, handleLogin, handleLogout, isAuthed } from './auth'
-import { hasPassword, setPassword, effectiveApiToken } from './settings'
+import { hasPassword, createPassword, effectiveApiToken } from './settings'
 import { DEPARTURE_MONO_WOFF2_B64 } from './font'
 import { FAVICON_SVG, shell } from './theme'
 import { landingPage, ROBOTS_TXT, sitemapXml, LLMS_TXT } from './landing'
@@ -118,7 +118,24 @@ app.get('/login', async (c) => {
   if (await isAuthed(c)) return c.redirect('/')
   return c.html(loginOrSetupPage(await hasPassword(c.env), c.req.query('error')))
 })
-app.post('/login', handleLogin)
+// Best-effort brute-force brake, per isolate: five bad passwords from one
+// address buys a minute of lockout. Real rate limiting belongs in front (WAF);
+// this makes unattended guessing expensive even on a bare deploy.
+const loginFails = new Map<string, { n: number; until: number }>()
+app.post('/login', async (c) => {
+  const ip = c.req.header('cf-connecting-ip') || 'local'
+  const f = loginFails.get(ip)
+  if (f && f.until > Date.now()) return c.redirect('/login?error=wrong')
+  const res = await handleLogin(c)
+  if ((res.headers.get('location') || '').includes('error=wrong')) {
+    const n = (f?.n ?? 0) + 1
+    loginFails.set(ip, { n, until: n >= 5 ? Date.now() + 60_000 : 0 })
+    if (loginFails.size > 10_000) loginFails.clear()
+  } else {
+    loginFails.delete(ip)
+  }
+  return res
+})
 app.post('/logout', handleLogout)
 // First-run: create the admin password, then log in.
 app.post('/setup', async (c) => {
@@ -126,7 +143,16 @@ app.post('/setup', async (c) => {
   const body = await c.req.parseBody()
   const pw = String(body.password ?? '')
   if (pw.length < 8) return c.redirect('/login?error=short')
-  await setPassword(c.env, pw)
+  let created = false
+  try {
+    created = await createPassword(c.env, pw) // conflict-safe: exactly one concurrent setup wins
+  } catch (e) {
+    if (String((e as Error)?.message ?? e).includes('no such table')) {
+      return c.text('Database not initialised. Run the migrations (npx wrangler d1 migrations apply DB --remote), then reload.', 500)
+    }
+    throw e
+  }
+  if (!created) return c.redirect('/login')
   const { issueSession } = await import('./auth')
   await issueSession(c)
   return c.redirect('/?welcome=1')

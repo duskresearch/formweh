@@ -130,8 +130,10 @@ export async function inboxPage(c: Ctx): Promise<Response> {
   const form = await getForm(c.env, c.req.param('slug') ?? '')
   if (!form) return c.notFound()
   const showSpam = c.req.query('spam') === '1'
+  const pageN = Math.max(0, Math.floor(Number(c.req.query('page') ?? 0) || 0))
+  const PAGE = 100
   const counts = await formCounts(c.env, form.id)
-  const subs = await listSubmissions(c.env, form.id, { spam: showSpam })
+  const subs = await listSubmissions(c.env, form.id, { spam: showSpam, limit: PAGE, offset: pageN * PAGE })
   const formUrl = `${origin(c)}/f/${form.slug}`
 
   const byoSnippet =
@@ -157,6 +159,16 @@ export async function inboxPage(c: Ctx): Promise<Response> {
       .join('') ||
     `<div class="empty" style="margin:8vh auto"><h2>${showSpam ? 'No spam' : 'No responses yet'}</h2><p>${showSpam ? 'Nothing filed as spam.' : 'Share your form and responses will appear here.'}</p>${!showSpam ? `<a class="btn ghost" href="${escapeAttr(formUrl)}" target="_blank" rel="noopener">Open the form ↗</a>` : ''}</div>`
 
+  const spamQ = showSpam ? 'spam=1&' : ''
+  const pager =
+    pageN > 0 || subs.length === PAGE
+      ? `<div style="display:flex;gap:8px;margin-top:14px">
+          ${pageN > 0 ? `<a class="btn ghost sm" href="/inbox/${escapeAttr(form.slug)}?${spamQ}page=${pageN - 1}">← Newer</a>` : ''}
+          <div style="flex:1"></div>
+          ${subs.length === PAGE ? `<a class="btn ghost sm" href="/inbox/${escapeAttr(form.slug)}?${spamQ}page=${pageN + 1}">Older →</a>` : ''}
+        </div>`
+      : ''
+
   const main = `
     <div class="mtop">
       <div><h1>${escapeHtml(form.name)}</h1><div class="sub">${counts.total} response${counts.total === 1 ? '' : 's'}${counts.unread ? ` · ${counts.unread} new` : ''}</div></div>
@@ -172,7 +184,8 @@ export async function inboxPage(c: Ctx): Promise<Response> {
       <a class="${showSpam ? 'on' : ''}" href="/inbox/${escapeAttr(form.slug)}?spam=1">Spam ${counts.spam ? `(${counts.spam})` : ''}</a>
     </div>
     ${byoSnippet}
-    <div class="content">${rows}</div>`
+    <div class="content">${rows}</div>
+    ${pager}`
   return appShell(c, { title: `${form.name} · Formweh`, main, active: form.slug })
 }
 

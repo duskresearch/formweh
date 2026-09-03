@@ -2,8 +2,8 @@ import type { Context } from 'hono'
 import type { Env } from './index'
 import { origin } from './index'
 import { shell, escapeHtml, escapeAttr } from './theme'
-import type { FormRow, Field } from './db'
-import { parseFields, insertSubmission, subByRefCode, incrementReferrals, waitlistPosition, waitlistTotal } from './db'
+import type { FormRow, Field, SubmissionRow } from './db'
+import { parseFields, insertSubmission, subByRefCode, subByEmail, incrementReferrals, waitlistPosition, waitlistTotal } from './db'
 import { turnstileKeys } from './settings'
 import { shortCode } from './settings'
 import { clientTraits } from './ua'
@@ -84,7 +84,7 @@ export async function renderFormPage(c: Ctx, form: FormRow): Promise<Response> {
   let refBanner = ''
   if (form.referral && ref) {
     const inviter = await subByRefCode(c.env, ref)
-    if (inviter) refBanner = `<div class="refnote">A friend invited you to <b>${escapeHtml(form.name)}</b>. Join and you both move up the line.</div>`
+    if (inviter && inviter.form_id === form.id) refBanner = `<div class="refnote">A friend invited you to <b>${escapeHtml(form.name)}</b>. Join and you both move up the line.</div>`
   }
   const inner = `
     <h1 class="f-title">${escapeHtml(form.intro_title || form.name)}</h1>
@@ -107,10 +107,20 @@ export async function submitForm(c: Ctx, form: FormRow): Promise<Response> {
 
   let raw: Record<string, unknown> = {}
   if (ctype.includes('application/json')) {
-    raw = await c.req.json().catch(() => ({}))
+    const parsed = await c.req.json().catch(() => null)
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) raw = parsed as Record<string, unknown>
   } else {
     const body = await c.req.parseBody({ all: true })
-    for (const [k, v] of Object.entries(body)) raw[k] = Array.isArray(v) ? v.map(String) : v
+    for (const [k, v] of Object.entries(body)) {
+      if (typeof v === 'string') raw[k] = v
+      else if (Array.isArray(v)) raw[k] = v.filter((x): x is string => typeof x === 'string')
+      // File uploads are dropped: there is nowhere to store them, and a silent {} in the inbox helps nobody.
+    }
+  }
+  // Size guardrails on a public endpoint: 100 fields, 200-char keys, 64 KB total.
+  const keys = Object.keys(raw)
+  if (keys.length > 100 || keys.some((k) => k.length > 200) || JSON.stringify(raw).length > 64_000) {
+    return respondError(c, form, 'Submission too large.', 413)
   }
 
   // Honeypot: a bot that fills the hidden field is spam. Capture the Turnstile
@@ -126,19 +136,40 @@ export async function submitForm(c: Ctx, form: FormRow): Promise<Response> {
   // response under spam rather than dropping it (a real visitor with JS trouble
   // isn't lost, and bots aren't tipped off).
   let spam = honey
-  const { secret } = await turnstileKeys(c.env)
-  if (form.spam_protection && secret) {
-    const ok = await verifyTurnstile(secret, turnstileToken, c.req.header('cf-connecting-ip'))
-    if (!ok) spam = true
+  const { site, secret } = await turnstileKeys(c.env)
+  // Verify only when this submission could have carried a token: a hosted form
+  // that rendered the widget, or any caller that actually sent one. A BYO form
+  // with no widget must never have its real leads filed as spam just because
+  // Turnstile keys exist. A siteverify outage fails open; the honeypot still applies.
+  const widgetServed = !!(form.spam_protection && form.mode === 'hosted' && site)
+  if (secret && (widgetServed || turnstileToken)) {
+    const verdict = await verifyTurnstile(secret, turnstileToken, c.req.header('cf-connecting-ip'))
+    if (verdict === 'fail') spam = true
   }
 
   // Pull out an email for notifications / waitlist / autoresponder.
   const fields = parseFields(form)
   const emailKey = fields.find((f) => f.type === 'email')?.key || (Object.keys(raw).find((k) => /email/i.test(k)) ?? '')
-  const email = emailKey ? String(raw[emailKey] ?? '').trim() || null : firstEmail(raw)
+  const emailRaw = emailKey ? String(raw[emailKey] ?? '').trim() || null : firstEmail(raw)
+  // Anything that doesn't look like an address stays in the data but is never
+  // USED as one (it would otherwise reach the autoresponder as a recipient).
+  const email = emailRaw && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw) ? emailRaw : null
 
   const traits = clientTraits(c.req.raw)
   const referer = c.req.header('referer') || null
+
+  // A waitlist join is idempotent per email: joining again returns the existing
+  // place and share link instead of inserting a duplicate row (which would also
+  // let anyone farm referral credit by resubmitting with a friend's code).
+  if (form.referral && !spam && email) {
+    const existing = await subByEmail(c.env, form.id, email)
+    if (existing) {
+      if (wantsJson) return c.json({ ok: true, id: existing.id, duplicate: true })
+      if (form.redirect_url) return c.redirect(form.redirect_url, 303)
+      if (form.mode === 'byo') return c.redirect(`/f/${form.slug}/thanks`, 303)
+      return c.redirect(existing.ref_code ? `/f/${form.slug}/thanks?w=${existing.ref_code}` : `/f/${form.slug}/thanks`, 303)
+    }
+  }
 
   // Waitlist: mint this signup's own share code, and credit the inviter.
   let myCode: string | null = null
@@ -147,7 +178,8 @@ export async function submitForm(c: Ctx, form: FormRow): Promise<Response> {
     myCode = shortCode()
     if (refCodeIn) {
       const inviter = await subByRefCode(c.env, refCodeIn)
-      if (inviter && inviter.form_id === form.id) referredBy = refCodeIn
+      const selfReferral = !!(email && inviter?.email && inviter.email.toLowerCase() === email.toLowerCase())
+      if (inviter && inviter.form_id === form.id && !selfReferral) referredBy = refCodeIn
     }
   }
 
@@ -176,48 +208,47 @@ export async function submitForm(c: Ctx, form: FormRow): Promise<Response> {
   if (wantsJson) return c.json({ ok: true, id })
   if (form.redirect_url) return c.redirect(form.redirect_url, 303)
   if (form.mode === 'byo') return c.redirect(`/f/${form.slug}/thanks`, 303)
-  // Hosted: show the success (and, for waitlists, the position + share).
-  return successPage(c, form, { id, email, myCode })
+  // Post/redirect/get: a refresh of the success page must never resubmit.
+  return c.redirect(myCode ? `/f/${form.slug}/thanks?w=${myCode}` : `/f/${form.slug}/thanks`, 303)
 }
 
-async function successPage(c: Ctx, form: FormRow, r: { id: number; email: string | null; myCode: string | null }): Promise<Response> {
-  if (form.referral && r.myCode) {
-    const sub = await subByRefCode(c.env, r.myCode)
-    const pos = sub ? await waitlistPosition(c.env, form.id, sub) : await waitlistTotal(c.env, form.id)
-    const total = await waitlistTotal(c.env, form.id)
-    const link = `${origin(c)}/f/${form.slug}?ref=${r.myCode}`
-    const inner = `<div class="done">
-      <div class="ring">✓</div>
-      <h1 class="f-title">${escapeHtml(form.success_message || 'You’re on the list.')}</h1>
-      <p class="f-desc">You’re <b>#${pos}</b> of ${total} in line.</p>
-      <p class="f-desc" style="margin-top:16px">Skip the line: every friend who joins with your link moves you up.</p>
-      <div class="share">
-        <input id="rl" value="${escapeAttr(link)}" readonly aria-label="Your referral link"/>
-        <button class="btn" type="button" onclick="navigator.clipboard.writeText(document.getElementById('rl').value);this.textContent='Copied'">Copy</button>
-      </div>
-    </div>`
-    return page(c, form, inner)
-  }
+async function waitlistSuccess(c: Ctx, form: FormRow, sub: SubmissionRow): Promise<Response> {
+  const pos = await waitlistPosition(c.env, form.id, sub)
+  const total = await waitlistTotal(c.env, form.id)
+  const link = `${origin(c)}/f/${form.slug}?ref=${sub.ref_code}`
   const inner = `<div class="done">
     <div class="ring">✓</div>
-    <h1 class="f-title">${escapeHtml(form.success_message || 'Thanks, we got it.')}</h1>
+    <h1 class="f-title">${escapeHtml(form.success_message || 'You’re on the list.')}</h1>
+    <p class="f-desc">You’re <b>#${pos}</b> of ${total} in line.</p>
+    <p class="f-desc" style="margin-top:16px">Skip the line: every friend who joins with your link moves you up.</p>
+    <div class="share">
+      <input id="rl" value="${escapeAttr(link)}" readonly aria-label="Your referral link"/>
+      <button class="btn" type="button" onclick="navigator.clipboard.writeText(document.getElementById('rl').value);this.textContent='Copied'">Copy</button>
+    </div>
   </div>`
   return page(c, form, inner)
 }
 
 export async function thanksRedirect(c: Ctx, form: FormRow): Promise<Response> {
+  // For waitlists the redirect carries the signup's share code, so the success
+  // page (position, share link) survives refreshes without resubmitting.
+  const w = c.req.query('w') || ''
+  if (form.referral && w) {
+    const sub = await subByRefCode(c.env, w)
+    if (sub && sub.form_id === form.id) return waitlistSuccess(c, form, sub)
+  }
   const inner = `<div class="done"><div class="ring">✓</div><h1 class="f-title">${escapeHtml(form.success_message || 'Thanks, we got it.')}</h1></div>`
   return page(c, form, inner)
 }
 
-function respondError(c: Ctx, form: FormRow, msg: string): Response {
+function respondError(c: Ctx, form: FormRow, msg: string, status: 400 | 413 = 400): Response {
   const wantsJson = (c.req.header('accept') || '').includes('application/json')
-  if (wantsJson) return c.json({ ok: false, error: msg }, 400)
-  return c.html(shell({ title: 'Closed · Formweh', css: FORM_CSS, body: `<main class="wrap"><div class="card"><h1 class="f-title">${escapeHtml(msg)}</h1></div></main>` }), 400)
+  if (wantsJson) return c.json({ ok: false, error: msg }, status)
+  return c.html(shell({ title: 'Closed · Formweh', css: FORM_CSS, body: `<main class="wrap"><div class="card"><h1 class="f-title">${escapeHtml(msg)}</h1></div></main>` }), status)
 }
 
-async function verifyTurnstile(secret: string, token: string, ip?: string): Promise<boolean> {
-  if (!token) return false
+async function verifyTurnstile(secret: string, token: string, ip?: string): Promise<'pass' | 'fail' | 'error'> {
+  if (!token) return 'fail'
   try {
     const fd = new FormData()
     fd.append('secret', secret)
@@ -225,9 +256,9 @@ async function verifyTurnstile(secret: string, token: string, ip?: string): Prom
     if (ip) fd.append('remoteip', ip)
     const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body: fd })
     const j = (await res.json()) as { success: boolean }
-    return !!j.success
+    return j.success ? 'pass' : 'fail'
   } catch {
-    return false
+    return 'error' // siteverify outage: fail open rather than eat real leads
   }
 }
 

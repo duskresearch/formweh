@@ -116,7 +116,7 @@ export async function builderPage(c: Ctx): Promise<Response> {
   </form>`
 
   const script = `
-    var FIELDS = ${JSON.stringify(fields)};
+    var FIELDS = ${JSON.stringify(fields).replace(/</g, '\\u003c')};
     var TYPES = [['short','Short answer'],['long','Long answer'],['email','Email'],['number','Number'],['choice','Multiple choice'],['checkboxes','Checkboxes']];
     function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
     function fieldHtml(f,i){

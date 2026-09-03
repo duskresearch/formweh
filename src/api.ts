@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import type { Env } from './index'
-import { effectiveApiToken } from './settings'
+import { effectiveApiToken, timingSafeEqual } from './settings'
 import { listForms, getForm, listSubmissions, parseData, type FormRow } from './db'
 
 // A small read API for pulling your forms and responses into scripts or another
@@ -16,7 +16,7 @@ apiRoutes.use('*', async (c, next) => {
   if (!token) return c.json({ error: 'API is disabled. Set an API token in Settings.' }, 503)
   const auth = c.req.header('authorization') || ''
   const sent = auth.startsWith('Bearer ') ? auth.slice(7) : ''
-  if (sent !== token) return c.json({ error: 'Unauthorized' }, 401)
+  if (!timingSafeEqual(sent, token)) return c.json({ error: 'Unauthorized' }, 401)
   return next()
 })
 
